@@ -9,6 +9,7 @@ from langchain import hub
 # from langchain_core.runnables import RunnablePassthrough
 from langchain.agents import create_react_agent, AgentExecutor
 from langchain_experimental.tools import PythonREPLTool
+from langchain_experimental.agents.agent_toolkits.csv.base import create_csv_agent
 
 def main():
     print("Start")
@@ -38,7 +39,14 @@ def main():
         }
     )
 
-    
+    csv_agent = create_csv_agent(
+        llm = ChatGoogleGenerativeAI(temperature= 0, model="gemini-2.0-flash"),
+        path = "episode_info.csv",
+        verbose = True,
+        allow_dangerous_code=True
+    )
+    csv_agent.invoke(input={"input": "How many columns are there in file episode_info.csv"})
+    csv_agent.invoke(input={"input": "In the file episode_info, which writer wrote the most episodes? How many episodes did he write? Split the writers if there are two or more writers in the same episode."})
 
 
 if __name__ == "__main__":
