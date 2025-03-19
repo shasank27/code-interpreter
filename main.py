@@ -1,4 +1,5 @@
-import os 
+import os
+from typing import Any 
 import dotenv
 dotenv.load_dotenv()
 from langchain.tools import tool, Tool
@@ -47,11 +48,14 @@ def main():
     # csv_agent.invoke(input={"input": "In the file episode_info, which writer wrote the most episodes? How many episodes did he write? Split the writers if there are two or more writers in the same episode."})
 
     # ROUTER GRAND AGENT
+    def python_agent_executor_wrapper(original_prompt: str)->dict[str, Any]:
+        return agent_executor.invoke({"input": original_prompt})
+
 
     tools = [
         Tool(
             name="Python Agent",
-            func=agent_executor.invoke,
+            func=python_agent_executor_wrapper,
             description="""useful when you need to transform natural language to python and execute the python code,
                             returning the results of code execution
                             DOES NOT ACCEPT CODE AS INPUT"""
